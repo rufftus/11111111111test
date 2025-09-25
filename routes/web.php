@@ -12,3 +12,5 @@ Route::get('/connexion', function () {return view('login');});
 //Route::get('/deconnecter', function () {return view('home');});
 
 Route::get('/deconnecter',[VisiteurController::class,'logout']);
+
+Route::get('/listerFrais',[VisiteurController::class,'listFrais']);
