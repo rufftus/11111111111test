@@ -35,11 +35,6 @@
                         <a class="nav-link" href="{{ url('/deconnecter') }}">Se déconnecter</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url('/listerFrais')}}">Lister</a>
-                    </li>
-                </ul>
             @else
 
                 <ul class="navbar-nav ms-auto">

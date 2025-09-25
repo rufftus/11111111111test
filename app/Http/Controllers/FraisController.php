@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Service\FraisService;
+use App\Service\VisiteurService;
 
-class FraisController
+
+class FraisController extends Controller
 {
     public function listerFrais()
     {
@@ -13,4 +15,12 @@ class FraisController
         $fiches=$services->getListFrais($id_visiteur);
         return view('listerFrais',['fiches'=>$fiches]);
     }
+
+    public function listFrais()
+    {
+        $frais=[];
+        return view('listerFrais',['frais'=>$frais]);
+    }
+
+
 }
