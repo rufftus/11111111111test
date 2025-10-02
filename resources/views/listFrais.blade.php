@@ -21,7 +21,7 @@
                 <td>{{$fr->nbjustificatifs}}</td>
                 <td>{{$fr->montantvalide}}</td>
                 <td>{{$fr->etat}}</td>
-                <td><a href="modifier">Modifier</a> </td>
+                <td><a href="{{url('/formFrais/'.$fr->numFrais )}}">Modifier</a> </td>
 
             </tr>
 

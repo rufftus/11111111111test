@@ -47,6 +47,8 @@ class FraisController extends Controller
     {
         $service=new FraisService();
         $frais=$service->getFrais($id);
+        return view('formFrais',compact('frais'));
+
     }
 
 
