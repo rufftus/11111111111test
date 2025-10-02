@@ -1,5 +1,6 @@
 <!-- resources/views/login.blade.php -->
-
+@extends('layouts.master')
+@section('content')
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -33,3 +34,4 @@
 
 </body>
 </html>
+@endsection
