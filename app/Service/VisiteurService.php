@@ -11,18 +11,31 @@ class VisiteurService
 {
     public function signIn($login, $mdp)
     {
-        $visiteur = Visiteur::where('login_visiteur', $login)->first();
+        try {
+            $visiteur = Visiteur::where('login_visiteur', $login)->first();
 
-        if ($visiteur && $visiteur->pwd_visiteur === $mdp) {  // Ici tu compares en clair, à adapter pour hash
-            Session::put('id_visiteur', $visiteur->id_visiteur);
-            Session::put('visiteur', "$visiteur->prenom_visiteur $visiteur->nom_visiteur");
-            return true;
+            if ($visiteur && $visiteur->pwd_visiteur === $mdp) {  // Ici tu compares en clair, à adapter pour hash
+                Session::put('id_visiteur', $visiteur->id_visiteur);
+                Session::put('visiteur', "$visiteur->prenom_visiteur $visiteur->nom_visiteur");
+                return true;
+            }
+            return false;
         }
-        return false;
+        catch (\Exception $exception)
+        {
+            return view('errors',compact('exception'));
+        }
     }
 
     public function signOut()
     {
-        Session::forget('id_visiteur');
-    }
+        try {
+            Session::forget('id_visiteur');
+        }
+        catch (\Exception $exception)
+        {
+            return view('errors',compact('exception'));
+        }
+
+        }
 }

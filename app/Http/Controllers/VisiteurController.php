@@ -9,28 +9,47 @@ class VisiteurController extends Controller
 {
     public function login()
     {
-        return view('login');
+        try {
+            return view('login');
+        }
+        catch (\Exception $exception)
+        {
+            return view('errors',compact('exception'));
+        }
     }
 
     public function logout()
     {
-        $visiteur=new VisiteurService();
+        try{
+        $visiteur = new VisiteurService();
         $visiteur->signOut();
         return redirect(url('/'));
+    }
+    catch (\Exception $exception)
+        {
+            return view('errors',compact('exception'));
+        }
     }
 
     public function auth(Request $request)
     {
-        $login = $request->input('login');
-        $mdp = $request->input('mdp'); // correspond au champ name="mdp"
+        try {
+            $login = $request->input('login');
+            $mdp = $request->input('mdp'); // correspond au champ name="mdp"
 
-        $service = new VisiteurService();
+            $service = new VisiteurService();
 
-        if ($service->signIn($login, $mdp)) {
-            return redirect(url('/'));
-        } else {
-            $erreur = "Identifiant ou mot de passe incorrect";
-            return view('login', compact('erreur'));
+            if ($service->signIn($login, $mdp)) {
+                return redirect(url('/'));
+            } else {
+                $erreur = "Identifiant ou mot de passe incorrect";
+                return view('login', compact('erreur'));
+            }
+        }
+
+    catch (\Exception $exception)
+        {
+            return view('errors',compact('exception'));
         }
     }
 }
