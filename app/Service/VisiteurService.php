@@ -15,6 +15,7 @@ class VisiteurService
 
         if ($visiteur && $visiteur->pwd_visiteur === $mdp) {  // Ici tu compares en clair, à adapter pour hash
             Session::put('id_visiteur', $visiteur->id_visiteur);
+            Session::put('visiteur', "$visiteur->prenom_visiteur $visiteur->nom_visiteur");
             return true;
         }
         return false;

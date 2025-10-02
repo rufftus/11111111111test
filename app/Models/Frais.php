@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-class Frais
+use Illuminate\Database\Eloquent\Model;
+
+class Frais extends Model
 {
 protected $table='frais';
 protected $primaryKey='id_frais';

@@ -14,11 +14,12 @@
                 <th>Modifier</th>
             </tr>
         </thread>
-        @foreach($frais as $fr)
+        @foreach($fiches as $fr)
             <tr>
-                <td>{{$fr->mois}}</td>
-                <td>{{$fr->montantsaisi}}</td>
-                <td>{{$fr->nbjustificatif}}</td>
+                <td>{{$fr->anneemois}}</td>
+                <td>{{$fr->id_frais}}</td>
+                <td>{{$fr->nbjustificatifs}}</td>
+                <td>{{$fr->montantvalide}}</td>
                 <td>{{$fr->etat}}</td>
                 <td><a href="modifier">Modifier</a> </td>
 
