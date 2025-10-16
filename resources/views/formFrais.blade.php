@@ -13,13 +13,22 @@
                     <input type="text" name="mois" class="form-control" maxlength="7" value="{{$frais->anneemois}}" placeholder="MM-AAAA" required>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-md-3">titre</label>
+                <div class="col-md-6">
+                    <input type="text" name="titre" class="form-control" maxlength="7" value="{{$frais->titre}}" placeholder="titre" required>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="col-md-3">Montant saisi</label>
                 <div class="col-md-6">
                     <input type="number" name="total" class="form-control " min="0" step="0.01" value="" disabled>
                 </div>
                 <div class="col-md-12 col-md-offset-3">
-                    <a href="" class="btn btn-info @if(!$frais->id_frais) disabled @endif">Frais hors forfait</a>
+                    <a href="{{url('/listerFraisHF/'.$frais->id_frais)}}" class="btn btn-info @if(!$frais->id_frais) disabled @endif">Frais hors forfait</a>
+
                     <a href="" class="btn btn-info @if(!$frais->id_frais)disabled @endif">Frais au forfait</a>
                 </div>
             </div>
@@ -38,9 +47,26 @@
             <div class="form-group">
                 <label class="col-md-3">Etat</label>
                 <div class="col-md-6">
-                    <input type="number" name="etat" class="form-control" min="1" max="4" value="{{$frais->id_etat}}" required>
+                    <select name="etat" id="etat" class="form-control" >
+                        @foreach($etats as $etat)
+                            <option value="{{ $etat->id_etat }}" {{ $etat->id_etat == $frais->id_etat ? 'selected' : '' }}>
+                                {{ $etat->lib_etat }}
+                            </option>
+
+                        @endforeach
+                    </select>
                 </div>
             </div>
+            @if(isset($frais->id_frais))
+            <div class="form-group">
+                <a href="{{url('/supprimerFrais/'.$frais->id_frais)}}"
+                   id="suppr" class="btn btn-danger"
+                   onclick="return confirm ('supprimer cette fiche de frais')">
+                    Supprimer
+                </a>
+            </div>
+            @endif
+
             <hr>
 
             <button type="submit" class="btn btn-primary">valider</button>

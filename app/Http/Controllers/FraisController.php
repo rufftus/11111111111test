@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Etat;
 use App\Models\Frais;
 use App\Service\FraisService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 
 class FraisController extends Controller
@@ -19,7 +22,7 @@ class FraisController extends Controller
         }
         catch (\Exception $exception)
         {
-            return view('errors',compact('exception'));
+            return view('error',compact('exception'));
         }
 
     }
@@ -31,36 +34,49 @@ class FraisController extends Controller
         try {
             $frais = new Frais();
             $frais->anneemois = date("Y-m");
-            return view('formFrais', compact('frais'));
+
+            $etats=[new Etat()];
+            $etats[0]->lib_etat="Création en cours";
+
+            return view('formFrais', compact('frais','etats'));
         }
 
     catch (\Exception $exception)
         {
-            return view('errors',compact('exception'));
+            return view('error',compact('exception'));
         }
 
     }
 
     public function validFrais(Request $request) {
         try {
-            $id_frais = $request->input('id');
             $service = new FraisService();
-            if ($id_frais) {
-                $frais = $service->getFrais($id_frais);
-            } else {
-                $frais = new Frais();
+
+            // Récupération ou création du frais
+            $id_frais = $request->input('id');
+            $frais = $id_frais ? $service->getFrais($id_frais) : new Frais();
+
+            // Récupération de l'état, avec une valeur par défaut
+            $id_etat = $request->input('etat');
+            if (empty($id_etat)) {
+                $id_etat = 2; // Par exemple : "Création en cours"
             }
+
+            // Remplissage des données
+            $frais->id_etat = $id_etat;
             $frais->id_visiteur = session('id_visiteur');
+            $frais->titre=$request->input('titre');
             $frais->anneemois = $request->input('mois');
             $frais->nbjustificatifs = $request->input('nbjustif');
             $frais->montantvalide = $request->input('valide');
-            $frais->id_etat = $request->input('etat');
             $frais->datemodification = date('Y-m-d');
+
+            // Sauvegarde
             $service->saveFrais($frais);
+
             return redirect(url('/listerFrais'));
 
         } catch (Exception $exception) {
-            // Gestion des erreurs
             return view('error', compact('exception'));
         }
     }
@@ -71,12 +87,42 @@ class FraisController extends Controller
         try {
             $service = new FraisService();
             $frais = $service->getFrais($id);
-            return view('formFrais', compact('frais'));
+
+            $etats=$service->getListEtats();
+
+            return view('formFrais', compact('frais','etats'));
         }
         catch (\Exception $exception)
         {
-            return view('errors',compact('exception'));
+            $erreur=Session::get('erreur');
+            Session::remove('erreur');
+            return view('error',compact('exception'));
         }
+
+    }
+
+    public function removeFrais($id)
+    {
+        try
+        {
+            $service = new FraisService();
+            $service->deleteFrais($id);
+            return redirect(url('/listerFrais'));
+        }
+        catch (\Exception $exception)
+        {
+            if($exception->getCode()==23000)
+            {
+                Session::put('erreur',$exception->getUserMessage());
+                return redirect(url('/editerFrais'.$id));
+            }
+            else
+            {
+                return view('error',compact('exception'));
+            }
+
+        }
+
 
     }
 

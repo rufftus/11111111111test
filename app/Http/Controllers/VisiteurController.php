@@ -14,7 +14,7 @@ class VisiteurController extends Controller
         }
         catch (\Exception $exception)
         {
-            return view('errors',compact('exception'));
+            return view('error',compact('exception'));
         }
     }
 
@@ -27,7 +27,7 @@ class VisiteurController extends Controller
     }
     catch (\Exception $exception)
         {
-            return view('errors',compact('exception'));
+            return view('error',compact('exception'));
         }
     }
 
@@ -49,7 +49,7 @@ class VisiteurController extends Controller
 
     catch (\Exception $exception)
         {
-            return view('errors',compact('exception'));
+            return view('error',compact('exception'));
         }
     }
 }
