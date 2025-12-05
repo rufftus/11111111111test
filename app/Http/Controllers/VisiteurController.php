@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Visiteur;
 use Illuminate\Http\Request;
 use App\Service\VisiteurService;
+use Illuminate\Support\Facades\Auth;
 
 class VisiteurController extends Controller
 {
@@ -51,5 +53,37 @@ class VisiteurController extends Controller
         {
             return view('error',compact('exception'));
         }
+    }
+
+
+    public function initPasswordAPI(Request $request){
+        try{
+            $request->validate(['pwd_visiteur'=>'required|min:3']);
+            $hash=bcrypt($request->json('pwd_visiteur'));
+            Visiteur::query()->update(['pwd_visiteur'=>$hash]);
+            return response()->json(['status'=>'mots de passe reinitialis']);
+        }
+        catch (\Exception $exception){
+            return response()->json(['error'=>$exception->getMessage()],500);
+        }
+    }
+
+    public function authApi(Request $request){
+        try{
+            $request->validate([
+                'login'=>'required',
+                'mdp'=>'required'
+            ]);
+            $login = $request->json('login');
+            $pwd = $request->json('pwd');
+            $identifiants = ['login_visiteur'=>$login,'password'=>$pwd];
+            if(!Auth::attempt($identifiants)){
+                return response()->json(['error'=>'Identifiant incorrect'],401);
+            }
+
+            $visiteur=$request->user();
+            $token=$visiteur->createToken('authToken')->plainTextToken;
+        }
+        catch (\Exception $exception){}
     }
 }
