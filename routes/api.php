@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FraisController;
 use App\Http\Controllers\VisiteurController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,3 +19,9 @@ Route::get('visiteur/logout',[VisiteurController::class,'logoutAPI'])
 Route::get('visiteur/unauthorized',[VisiteurController::class,'unauthorizedAPI'])
 ->name('login');
 
+
+Route::get('frais/{idFrais}',[FraisController::class,'getFrais_API'])
+    ->middleware('auth:sanctum');
+
+Route::post('frais/ajout', [FraisController::class,'addFrais_API'])
+    ->middleware('auth:sanctum');

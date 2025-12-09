@@ -120,11 +120,51 @@ class FraisController extends Controller
             {
                 return view('error',compact('exception'));
             }
+        }
+    }
+
+    public function getFrais_API($idFrais)
+    {
+        try {
+            $service = new FraisService();
+
+            $frais = $service->getFrais($idFrais);
+
+            return response()->json([
+                'id_frais'         => $frais->id_frais,
+                'id_etat'          => $frais->id_etat,
+                'anneemois'        => $frais->anneemois,
+                'id_visiteur'      => $frais->id_visiteur,
+                'nbjustificatifs'  => $frais->nbjustificatifs,
+                'datemodification' => $frais->datemodification,
+                'montantvalide'    => $frais->montantvalide
+            ]);
+
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+    }
+
+    public function addFrais_API(Request $request)
+    {
+        try {
+            $request->validate([
+                'anneemois'=>'required',
+                'id_visiteur'=>'required',
+                'nbjustificatifs'=>'required',
+            ]);
+            $service = new FraisService();
+
 
         }
+        catch (\Exception $exception)
+        {
 
-
+        }
     }
+
+
+
 
 
 
