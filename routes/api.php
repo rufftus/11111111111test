@@ -8,6 +8,13 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('visiteur/initpwd',[VisiteurController::class,'initPasswordAPI'] )
-    ;
+Route::post('visiteur/initpwd',[VisiteurController::class,'initPasswordAPI']);
+
+Route::post('visiteur/auth',[VisiteurController::class,'authAPI']);
+
+Route::get('visiteur/logout',[VisiteurController::class,'logoutAPI'])
+    ->middleware('auth:sanctum');
+
+Route::get('visiteur/unauthorized',[VisiteurController::class,'unauthorizedAPI'])
+->name('login');
 

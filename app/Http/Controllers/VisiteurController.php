@@ -68,14 +68,14 @@ class VisiteurController extends Controller
         }
     }
 
-    public function authApi(Request $request){
+    public function authAPI(Request $request){
         try{
             $request->validate([
                 'login'=>'required',
-                'mdp'=>'required'
+                'pwd'=>'required'
             ]);
-            $login = $request->json('login');
-            $pwd = $request->json('pwd');
+            $login = $request->json("login");
+            $pwd = $request->json("pwd");
             $identifiants = ['login_visiteur'=>$login,'password'=>$pwd];
             if(!Auth::attempt($identifiants)){
                 return response()->json(['error'=>'Identifiant incorrect'],401);
@@ -83,7 +83,35 @@ class VisiteurController extends Controller
 
             $visiteur=$request->user();
             $token=$visiteur->createToken('authToken')->plainTextToken;
+            return response()->json([
+                'token'=>$token,
+                'token_type'=>'Bearer',
+                'visiteur'=> [
+                    'id_visiteur'=>$visiteur->id_visiteur,
+                    'nom_visiteur'=>$visiteur->nom_visiteur,
+                    'prenom_visiteur'=>$visiteur->prenom_visiteur,
+                    'type_visiteur'=>$visiteur->type_visiteur,
+                ]
+            ]);
         }
-        catch (\Exception $exception){}
+        catch (\Exception $exception){
+            return response()->json(['error'=>$exception->getMessage()],500);
+        }
+    }
+
+    public function logoutAPI(Request $request)
+    {
+        try{
+            $request->user()->tokens()->delete();
+            return response()->json(['status'=>'utilisateur déconnecté']);
+        }
+        catch (\Exception $exception){
+            return response()->json(['error'=>$exception->getMessage()],500);
+        }
+    }
+
+    public function unauthorizedAPI()
+    {
+        return response()->json(['error'=>'acces non autorise'],401);
     }
 }
