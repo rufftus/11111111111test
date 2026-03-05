@@ -18,6 +18,7 @@ Route::get('/deconnecter',[VisiteurController::class,'logout']);
 
 
 Route::get('/listerFrais',[FraisController::class,'listFrais']);
+
 Route::get('/ajouterFrais',[FraisController::class,'addFrais']);
 
 Route::post('/validerFrais',[FraisController::class,'validFrais']);
@@ -35,3 +36,6 @@ Route::get('/ajouterFraisHF/{id}',[FraisHFController::class,'addFraisHF']);
 Route::get('/editerFraisHF/{id}',[FraisHFController::class,'editFraisHF']);
 
 Route::post('validerFraisHF',[FraisHFController::class,'validFraisHF']);
+
+
+Route::get('/practicienA',[FraisController::class,'practiceA']);

@@ -163,6 +163,23 @@ class FraisController extends Controller
         }
     }
 
+    public function practiceA()
+    {
+        try {
+            $services = new FraisService();
+            $id_visiteur= session('id_visiteur');
+            $fiches=$services->getListPracticien($id_visiteur);
+            return view('listFrais',compact('fiches'));
+        }
+        catch (\Exception $exception)
+        {
+            return view('error',compact('exception'));
+        }
+
+    }
+
+
+
 
 
 

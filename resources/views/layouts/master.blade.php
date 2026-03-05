@@ -29,6 +29,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/ajouterFrais') }}">Ajouter</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/practicienA') }}">Practicien</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
