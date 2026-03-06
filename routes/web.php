@@ -3,6 +3,7 @@
 use App\Http\Controllers\FraisHFController;
 use App\Http\Controllers\VisiteurController;
 use App\Http\Controllers\FraisController;
+use App\Http\Controllers\PraticienController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {return view('home');});
@@ -38,4 +39,4 @@ Route::get('/editerFraisHF/{id}',[FraisHFController::class,'editFraisHF']);
 Route::post('validerFraisHF',[FraisHFController::class,'validFraisHF']);
 
 
-Route::get('/practicienA',[FraisController::class,'practiceA']);
+Route::get('/practicienA',[PraticienController::class,'practiceA']);

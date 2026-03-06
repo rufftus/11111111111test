@@ -87,23 +87,6 @@ class FraisService
         }
     }
 
-    public function getListPracticien($id_visiteur)
-    {
-        try {
-            $liste=Frais::query()
-                ->select('frais.*','etat.lib_etat')
-                ->join('etat','etat.id_etat','=','frais.id_etat')
-                ->where('id_visiteur','=',$id_visiteur)
-                ->get();
 
-            return $liste;
-
-        }
-        catch (QueryException $exception)
-        {
-            $userMessage="Impossible dacceder a la base de donnees.";
-            throw new UserException($userMessage, $exception->getMessage(), $exception->getCode());
-        }
-    }
 
 }
