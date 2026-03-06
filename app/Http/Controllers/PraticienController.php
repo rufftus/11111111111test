@@ -14,9 +14,8 @@ class PraticienController extends Controller
     {
         try {
             $services = new PraticienService();
-            $id_praticien= session('id_praticien');
-            $fiches=$services->getListPracticien($id_praticien);
-            return view('listPraticiens',compact('fiches'));
+            $fiches=$services->getListPracticien();
+            return view('listPraticien',compact('fiches'));
         }
         catch (\Exception $exception)
         {
