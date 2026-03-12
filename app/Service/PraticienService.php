@@ -9,7 +9,7 @@ use Illuminate\Database\QueryException;
 class PraticienService
 {
 
-    public function getListPracticien() // Plus besoin de paramètre
+    public function getListPracticien()
     {
         try {
             $liste = Praticien::query()

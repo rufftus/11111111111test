@@ -4,6 +4,7 @@ use App\Http\Controllers\FraisHFController;
 use App\Http\Controllers\VisiteurController;
 use App\Http\Controllers\FraisController;
 use App\Http\Controllers\PraticienController;
+use App\Http\Controllers\SpecialiteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {return view('home');});
@@ -40,3 +41,5 @@ Route::post('validerFraisHF',[FraisHFController::class,'validFraisHF']);
 
 
 Route::get('/practicienA',[PraticienController::class,'practiceA']);
+Route::get('/practicienB',[SpecialiteController::class,'practiceB']);
+
