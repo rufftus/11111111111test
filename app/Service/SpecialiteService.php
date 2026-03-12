@@ -6,6 +6,7 @@ use App\Exceptions\UserException;
 use App\Models\Praticien;
 use App\Models\Specialite;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class SpecialiteService
 {
@@ -14,10 +15,10 @@ class SpecialiteService
     {
         try {
             $liste = Specialite::query()
-                ->select('specialite.lib_specialite', 'SUM(activite_compl.id_activite_compl)')
+                ->select('specialite.lib_specialite', DB::raw('COUNT(inviter.id_praticien) as total_invitations'))
                 ->join('posseder', 'posseder.id_specialite', '=', 'specialite.id_specialite')
-                ->join('practicien', 'practicien.id_praticien', '=', 'posseder.id_praticien')
-                ->join('inviter', 'inviter.id_practicien', '=', 'practicien.id_practicien')
+                ->join('praticien', 'praticien.id_praticien', '=', 'posseder.id_praticien')
+                ->join('inviter', 'inviter.id_praticien', '=', 'praticien.id_praticien')
                 ->join('activite_compl', 'activite_compl.id_activite_compl', '=', 'inviter.id_activite_compl')
                 ->groupBy('specialite.lib_specialite')
                 ->get();
