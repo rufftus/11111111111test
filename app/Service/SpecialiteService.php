@@ -15,13 +15,24 @@ class SpecialiteService
     {
         try {
             $liste = Specialite::query()
-                ->select('specialite.lib_specialite', DB::raw('COUNT(inviter.id_praticien) as total_invitations'))
+                ->select(
+                    'specialite.id_specialite',
+                    'specialite.lib_specialite',
+                    'activite_compl.theme_activite',
+                    'activite_compl.motif_activite',
+                    DB::raw('COUNT(inviter.id_praticien) as total_invitations')
+                )
                 ->join('posseder', 'posseder.id_specialite', '=', 'specialite.id_specialite')
                 ->join('praticien', 'praticien.id_praticien', '=', 'posseder.id_praticien')
                 ->join('inviter', 'inviter.id_praticien', '=', 'praticien.id_praticien')
                 ->join('activite_compl', 'activite_compl.id_activite_compl', '=', 'inviter.id_activite_compl')
-                ->groupBy('specialite.lib_specialite')
-                ->orderBy('specialite.lib_specialite','desc')
+                ->groupBy(
+                    'specialite.id_specialite',
+                    'specialite.lib_specialite',
+                    'activite_compl.theme_activite',
+                    'activite_compl.motif_activite'
+                )
+                ->orderBy('total_invitations', 'desc')
                 ->limit(5)
                 ->get();
 
