@@ -21,7 +21,7 @@
                 <td>{{$fr->lib_specialite}}</td>
                 <td>{{$fr->theme_activite}}</td>
                 <td>{{$fr->motif_activite}}</td>
-                <td>{{$fr->lib_specialite}}</td>
+                <td>{{$fr->total_invitations}}</td>
             </tr>
 
         @endforeach

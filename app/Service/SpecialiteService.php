@@ -21,6 +21,8 @@ class SpecialiteService
                 ->join('inviter', 'inviter.id_praticien', '=', 'praticien.id_praticien')
                 ->join('activite_compl', 'activite_compl.id_activite_compl', '=', 'inviter.id_activite_compl')
                 ->groupBy('specialite.lib_specialite')
+                ->orderBy('specialite.lib_specialite','desc')
+                ->limit(5)
                 ->get();
 
             return $liste;
