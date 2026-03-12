@@ -40,6 +40,8 @@
                             <a class="nav-link dropdown-toggle" href="{{ url('/practicienA') }}">Practicien</a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ url('/practicienB') }}">Top spécialités</a></li>
+                                <li><a class="dropdown-item" href="{{ url('/practicienC') }}">Formulaire d'invité</a></li>
+                                <li><a class="dropdown-item" href="{{ url('/practicienD') }}">Recherche</a></li>
                             </ul>
                         </li>
                     </ul>

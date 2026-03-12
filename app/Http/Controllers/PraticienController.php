@@ -14,13 +14,18 @@ class PraticienController extends Controller
     {
         try {
             $services = new PraticienService();
-            $fiches=$services->getListPracticien();
-            return view('listPraticien',compact('fiches'));
-        }
-        catch (\Exception $exception)
-        {
-            return view('error',compact('exception'));
+            $fiches = $services->getListPracticien();
+            return view('listPraticien', compact('fiches'));
+        } catch (\Exception $exception) {
+            return view('error', compact('exception'));
         }
 
     }
+
+    public function practiceC()
+    {
+
+    }
+
+
 }

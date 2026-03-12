@@ -43,3 +43,9 @@ Route::post('validerFraisHF',[FraisHFController::class,'validFraisHF']);
 Route::get('/practicienA',[PraticienController::class,'practiceA']);
 Route::get('/practicienB',[SpecialiteController::class,'practiceB']);
 
+
+Route::get('/practicienC',[SpecialiteController::class,'practiceB']);
+
+
+Route::get('/practicienC',[PraticienController::class,'practiceC']);
+
