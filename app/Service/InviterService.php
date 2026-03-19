@@ -26,18 +26,6 @@ class InviterService
             ->first();
     }
 
-    public function saveInvitation($id_activite, $id_praticien, $old_id_activite = null, $old_id_praticien = null) {
-        // Si c'est une modification, on supprime l'ancienne liaison d'abord
-        if ($old_id_activite && $old_id_praticien) {
-            $this->deleteInvitation($old_id_activite, $old_id_praticien);
-        }
-
-       Inviter::insert([
-            'id_activite_compl' => $id_activite,
-            'id_praticien'      => $id_praticien
-        ]);
-    }
-
     public function deleteInvitation($id_activite, $id_praticien) {
         Inviter::where('id_activite_compl', $id_activite)
             ->where('id_praticien', $id_praticien)

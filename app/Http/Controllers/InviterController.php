@@ -17,9 +17,7 @@ class InviterController extends Controller
         $activites = $service->getActivites();
         $praticiens = $service->getPraticiens();
 
-        $invitation = (object)['id_activite_compl' => '', 'id_praticien' => ''];
-
-        return view('formInvitation', compact('invitation', 'activites', 'praticiens'));
+        return view('formInvitation', compact( 'activites', 'praticiens'));
     }
 
     public function validInviter(Request $request)
@@ -41,20 +39,9 @@ class InviterController extends Controller
         }
     }
 
-    public function editInviter($id_activite, $id_praticien)
-    {
-        $service = new InviterService();
-        $invitation = $service->getInvitation($id_activite, $id_praticien);
-        $activites = $service->getActivites();
-        $praticiens = $service->getPraticiens();
-
-        return view('formInvitation', compact('invitation', 'activites', 'praticiens'));
-    }
-
     public function removeInviter($id_activite, $id_praticien)
     {
         $service = new InviterService();
         $service->deleteInvitation($id_activite, $id_praticien);
-        return redirect('/'); // À adapter selon ton projet
     }
 }
