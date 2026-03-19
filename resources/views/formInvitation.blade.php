@@ -1,82 +1,53 @@
 @extends('layouts.master')
 
 @section('content')
-    <form method="POST" action="{{ url('/validInviter') }}">
+    <form method="POST" action="{{ route('valider.inviter') }}">
         @csrf
-        <h1>@if($frais->id_frais) Modification @else Ajout @endif Fiche de frais</h1>
-        <input type="hidden" name="id" value="{{$frais->id_frais}}">
+        <h1>@if($invitation->id_activite_compl != '') Modification @else Ajout @endif d'une Invitation</h1>
+
+        <input type="hidden" name="old_id_activite_compl" value="{{ $invitation->id_activite_compl }}">
+        <input type="hidden" name="old_id_praticien" value="{{ $invitation->id_praticien }}">
 
         <div class="col-md-12 card card-body bg-light">
-            <div class="form-group">
-                <label class="col-md-3">Mois</label>
-                <div class="col-md-6">
-                    <input type="text" name="mois" class="form-control" maxlength="7" value="{{$frais->anneemois}}" placeholder="MM-AAAA" required>
-                </div>
-            </div>
 
             <div class="form-group">
-                <label class="col-md-3">titre</label>
+                <label class="col-md-3">Activité Complémentaire</label>
                 <div class="col-md-6">
-                    <input type="text" name="titre" class="form-control" maxlength="7" value="{{$frais->titre}}" placeholder="titre" required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-md-3">Montant saisi</label>
-                <div class="col-md-6">
-                    <input type="number" name="total" class="form-control " min="0" step="0.01" value="" disabled>
-                </div>
-                <div class="col-md-12 col-md-offset-3">
-                    <a href="{{url('/listerFraisHF/'.$frais->id_frais)}}" class="btn btn-info @if(!$frais->id_frais) disabled @endif">Frais hors forfait</a>
-
-                    <a href="" class="btn btn-info @if(!$frais->id_frais)disabled @endif">Frais au forfait</a>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-md-3">Nb justificatifs</label>
-                <div class="col-md-6">
-                    <input type="number" name="nbjustif" class="form-control" min="0" value="{{$frais->nbjustificatifs}}">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-md-3">Montant validé</label>
-                <div class="col-md-6">
-                    <input type="number" name="valide" class="form-control" min="0" step="0.01" value="{{$frais->montantvalide}}">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-md-3">Etat</label>
-                <div class="col-md-6">
-                    <select name="etat" id="etat" class="form-control" >
-                        @foreach($etats as $etat)
-                            <option value="{{ $etat->id_etat }}" {{ $etat->id_etat == $frais->id_etat ? 'selected' : '' }}>
-                                {{ $etat->lib_etat }}
-                            </option>
-
+                    <select name="id_activite_compl" class="form-control" required>
+                        <option value="">-- Choisir une activité --</option>
+                        @foreach($activites as $activite)
+                            <option value="{{ $activite->id_activite_compl }}" {{ $invitation->id_activite_compl == $activite->id_activite_compl ? 'selected' : '' }}>
+                                {{ $activite->id_activite_compl }} </option>
                         @endforeach
                     </select>
                 </div>
             </div>
-            @if(isset($frais->id_frais))
+
+            <div class="form-group">
+                <label class="col-md-3">Praticien</label>
+                <div class="col-md-6">
+                    <select name="id_praticien" class="form-control" required>
+                        <option value="">-- Choisir un praticien --</option>
+                        @foreach($praticiens as $praticien)
+                            <option value="{{ $praticien->id_praticien }}" {{ $invitation->id_praticien == $praticien->id_praticien ? 'selected' : '' }}>
+                                {{ $praticien->PRA_NOM }} {{ $praticien->PRA_PRENOM }} </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            @if($invitation->id_activite_compl != '')
                 <div class="form-group">
-                    <a href="{{url('/supprimerFrais/'.$frais->id_frais)}}"
-                       id="suppr" class="btn btn-danger"
-                       onclick="return confirm ('supprimer cette fiche de frais')">
+                    <a href="{{ url('/supprimerInviter/'.$invitation->id_activite_compl.'/'.$invitation->id_praticien) }}"
+                       class="btn btn-danger"
+                       onclick="return confirm('Voulez-vous vraiment supprimer cette invitation ?')">
                         Supprimer
                     </a>
                 </div>
             @endif
 
             <hr>
-
-            <button type="submit" class="btn btn-primary">valider</button>
-
-
-
+            <button type="submit" class="btn btn-primary">Valider</button>
         </div>
     </form>
-
-    @if(isset($erreur))
-        <div class="alert alert-danger" role="alert">{{ $erreur }}</div>
-    @endif
 @endsection

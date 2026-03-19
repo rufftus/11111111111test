@@ -48,11 +48,8 @@ Route::get('/practicienB',[SpecialiteController::class,'practiceB']);
 Route::get('/recherche', [PraticienController::class, 'index'])->name('recherche.praticien');
 
 
-Route::get('/ajouterInviter',[PraticienController::class,'addInviter']);
-Route::post('/validerFrais',[PraticienController::class,'validInviter']);
+Route::get('/ajouterInviter', [InviterController::class, 'addInviter'])->name('ajouter.inviter');
+Route::post('/validerInviter', [InviterController::class, 'validInviter'])->name('valider.inviter');Route::get('/editerInviter/{id_activite}/{id_praticien}', [InviterController::class, 'editInviter']);
+Route::get('/supprimerInviter/{id_activite}/{id_praticien}', [InviterController::class, 'removeInviter']);
 
-
-
-
-Route::get('/editerInvite/{id}',[InviterController::class,'editInvite']);
 

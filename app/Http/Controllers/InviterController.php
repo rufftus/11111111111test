@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activite_compl;
 use Illuminate\Http\Request;
 use App\Models\Inviter;
 use Exception;
@@ -10,98 +11,50 @@ use App\Service\InviterService;
 
 class InviterController extends Controller
 {
-
-    public function addFrais()
+    public function addInviter()
     {
-        try {
-            $frais = new Frais();
-            $frais->anneemois = date("Y-m");
+        $service = new InviterService();
+        $activites = $service->getActivites();
+        $praticiens = $service->getPraticiens();
 
-            $etats=[new Etat()];
-            $etats[0]->lib_etat="Création en cours";
+        $invitation = (object)['id_activite_compl' => '', 'id_praticien' => ''];
 
-            return view('formFrais', compact('frais','etats'));
-        }
-
-        catch (\Exception $exception)
-        {
-            return view('error',compact('exception'));
-        }
-
+        return view('formInvitation', compact('invitation', 'activites', 'praticiens'));
     }
 
-    public function validFrais(Request $request) {
+    public function validInviter(Request $request)
+    {
         try {
-            $service = new FraisService();
+            $service = new InviterService();
+            $id_activite = $request->input('id_activite_compl');
+            $id_praticien = $request->input('id_praticien');
 
-            // Récupération ou création du frais
-            $id_frais = $request->input('id');
-            $frais = $id_frais ? $service->getFrais($id_frais) : new Frais();
+            $old_id_activite = $request->input('old_id_activite_compl');
+            $old_id_praticien = $request->input('old_id_praticien');
 
-            // Récupération de l'état, avec une valeur par défaut
-            $id_etat = $request->input('etat');
-            if (empty($id_etat)) {
-                $id_etat = 2; // Par exemple : "Création en cours"
-            }
+            $service->saveInvitation($id_activite, $id_praticien, $old_id_activite, $old_id_praticien);
 
-            // Remplissage des données
-            $frais->id_etat = $id_etat;
-            $frais->id_visiteur = session('id_visiteur');
-            $frais->titre=$request->input('titre');
-            $frais->anneemois = $request->input('mois');
-            $frais->nbjustificatifs = $request->input('nbjustif');
-            $frais->montantvalide = $request->input('valide');
-            $frais->datemodification = date('Y-m-d');
-
-            // Sauvegarde
-            $service->saveFrais($frais);
-
-            return redirect(url('/listerFrais'));
+            return redirect('/');
 
         } catch (Exception $exception) {
             return view('error', compact('exception'));
         }
     }
 
-
-    public function editFrais($id)
+    public function editInviter($id_activite, $id_praticien)
     {
-        try {
-            $service = new FraisService();
-            $frais = $service->getFrais($id);
+        $service = new InviterService();
+        $invitation = $service->getInvitation($id_activite, $id_praticien);
+        $activites = $service->getActivites();
+        $praticiens = $service->getPraticiens();
 
-            $etats=$service->getListEtats();
-
-            return view('formFrais', compact('frais','etats'));
-        }
-        catch (\Exception $exception)
-        {
-            $erreur=Session::get('erreur');
-            Session::remove('erreur');
-            return view('error',compact('exception'));
-        }
-
+        return view('formInvitation', compact('invitation', 'activites', 'praticiens'));
     }
 
-    public function removeFrais($id)
+    public function removeInviter($id_activite, $id_praticien)
     {
-        try
-        {
-            $service = new FraisService();
-            $service->deleteFrais($id);
-            return redirect(url('/listerFrais'));
-        }
-        catch (\Exception $exception)
-        {
-            if($exception->getCode()==23000)
-            {
-                Session::put('erreur',$exception->getUserMessage());
-                return redirect(url('/editerFrais'.$id));
-            }
-            else
-            {
-                return view('error',compact('exception'));
-            }
-        }
+        $service = new InviterService();
+        $service->deleteInvitation($id_activite, $id_praticien);
+        return redirect('/'); // À adapter selon ton projet
     }
 }

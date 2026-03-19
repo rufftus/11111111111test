@@ -27,41 +27,6 @@ class PraticienService
         }
     }
 
-    public function saveFrais(Frais $frais)
-    {
-        try {
-            $frais->save();
-        }
-        catch (QueryException $exception)
-        {
-            $userMessage="Impossible dacceder a la base de donnees.";
-            throw new UserException($userMessage, $exception->getMessage(), $exception->getCode());
-        }
-    }
 
-
-
-
-    public function deleteFrais($id)
-    {
-        try {
-            $frais = Frais::query()->find($id);
-            $frais->delete();
-        }
-        catch (QueryException $exception)
-        {
-            if($exception->getCode()==23000)
-            {
-                $userMessage="Impossible de supprimer une fiche avec des frais saisis ";
-            }
-            else
-            {
-                $userMessage="Erreur de suppression dans la base de donnees.";
-            }
-
-
-            throw new UserException($userMessage, $exception->getMessage(), $exception->getCode());
-        }
-    }
 
 }
