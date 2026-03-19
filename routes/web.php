@@ -45,8 +45,7 @@ Route::get('/practicienA',[PraticienController::class,'practiceA']);
 Route::get('/practicienB',[SpecialiteController::class,'practiceB']);
 
 
-Route::get('/Recherche',[PraticienController::class,'Rechercher']);
-
+Route::get('/recherche', [PraticienController::class, 'index'])->name('recherche.praticien');
 
 Route::get('/FormulaireInvite',[InviterController::class,'FormulaireInvi']);
 

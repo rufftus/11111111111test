@@ -41,7 +41,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ url('/practicienB') }}">Top spécialités</a></li>
                                 <li><a class="dropdown-item" href="{{ url('/FormulaireInvite') }}">Formulaire d'invité</a></li>
-                                <li><a class="dropdown-item" href="{{ url('/Recherche') }}">Recherche</a></li>
+                                <li><a class="dropdown-item" href="{{ url('/recherche') }}">Recherche</a></li>
                             </ul>
                         </li>
                     </ul>

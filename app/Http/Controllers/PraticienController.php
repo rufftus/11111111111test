@@ -22,9 +22,35 @@ class PraticienController extends Controller
 
     }
 
-    public function Rechercher(Request $request)
+    public function index(Request $request)
     {
+        $query = $request->input('laRecherche');
 
+        if ($query) {
+            $praticiens = Praticien::where('nom_praticien', 'LIKE', "%{$query}%")
+                ->orWhere('prenom_praticien', 'LIKE', "%{$query}%")
+                ->get();
+        } else {
+            $praticiens = collect();
+        }
+
+        return view('recherche', compact('praticiens', 'query'));
+    }
+
+
+    public function index2(Request $request)
+    {
+        $query = $request->input('laRecherche');
+
+        if ($query) {
+            $praticiens = Praticien::where('nom_praticien', 'LIKE', "%{$query}%")
+                ->orWhere('prenom_praticien', 'LIKE', "%{$query}%")
+                ->get();
+        } else {
+            $praticiens = collect();
+        }
+
+        return view('recherche', compact('praticiens', 'query'));
     }
 
 
