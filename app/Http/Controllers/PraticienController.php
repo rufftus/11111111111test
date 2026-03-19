@@ -22,7 +22,7 @@ class PraticienController extends Controller
 
     }
 
-    public function practiceC()
+    public function Rechercher(Request $request)
     {
 
     }

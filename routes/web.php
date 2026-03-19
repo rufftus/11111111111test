@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FraisHFController;
+use App\Http\Controllers\InviterController;
 use App\Http\Controllers\VisiteurController;
 use App\Http\Controllers\FraisController;
 use App\Http\Controllers\PraticienController;
@@ -44,8 +45,8 @@ Route::get('/practicienA',[PraticienController::class,'practiceA']);
 Route::get('/practicienB',[SpecialiteController::class,'practiceB']);
 
 
-Route::get('/practicienC',[SpecialiteController::class,'practiceB']);
+Route::get('/Recherche',[PraticienController::class,'Rechercher']);
 
 
-Route::get('/practicienC',[PraticienController::class,'practiceC']);
+Route::get('/FormulaireInvite',[InviterController::class,'FormulaireInvi']);
 
