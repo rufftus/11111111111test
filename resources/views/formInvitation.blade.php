@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-    <form method="POST" action="{{ url('/validerFrais') }}">
+    <form method="POST" action="{{ url('/validInviter') }}">
         @csrf
         <h1>@if($frais->id_frais) Modification @else Ajout @endif Fiche de frais</h1>
         <input type="hidden" name="id" value="{{$frais->id_frais}}">

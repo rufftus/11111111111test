@@ -24,7 +24,7 @@
                        <tr><td>{{ $praticien->nom_praticien }}</td>
                         <td>{{ $praticien->prenom_praticien }}</td>
                         <td>({{ $praticien->ville_praticien }})</td>
-                           <td><a href="{{url('/editerFrais/'.$praticien->id_frais )}}">Modifier</a> </td>
+                           <td><a href="{{url('/editerInvite/'.$praticien->id_frais )}}">Modifier</a> </td>
                        </tr>
                 @endforeach
         </table>
