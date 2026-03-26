@@ -25,3 +25,5 @@ Route::get('frais/{idFrais}',[FraisController::class,'getFrais_API'])
 
 Route::post('frais/ajout', [FraisController::class,'addFrais_API'])
     ->middleware('auth:sanctum');
+
+Route::get('/frais/liste/{idVisiteur}', [FraisController::class, 'listFraisAPI']);
