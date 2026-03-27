@@ -4,6 +4,7 @@ use App\Http\Controllers\FraisController;
 use App\Http\Controllers\VisiteurController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PraticienController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -27,3 +28,9 @@ Route::post('frais/ajout', [FraisController::class,'addFrais_API'])
     ->middleware('auth:sanctum');
 
 Route::get('/frais/liste/{idVisiteur}', [FraisController::class, 'listFraisAPI']);
+
+
+
+
+
+Route::get('praticiens/recherche', [PraticienController::class, 'searchAPI']);

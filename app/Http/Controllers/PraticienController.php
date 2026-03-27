@@ -42,4 +42,21 @@ class PraticienController extends Controller
 
 
 
+
+
+
+
+
+
+
+    public function searchAPI(Request $request)
+    {
+        $services = new PraticienService();
+        $fiches = $services->getListPracticien();
+        return json_encode($fiches);
+    }
+
+
+
+
 }
