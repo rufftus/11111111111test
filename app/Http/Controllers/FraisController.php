@@ -165,9 +165,6 @@ class FraisController extends Controller
 
     public function listFraisAPI($idVisiteur) {
 
-
-
-
         $service = new FraisService();
         $liste = $service->getListFrais($idVisiteur);
 

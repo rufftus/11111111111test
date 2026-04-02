@@ -11,7 +11,6 @@
                 <th>Prénom</th>
                 <th>Adresse</th>
                 <th>Spécialité</th>
-
             </tr>
         </thread>
         @foreach($fiches as $fr)

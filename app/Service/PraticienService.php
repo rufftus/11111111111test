@@ -14,8 +14,8 @@ class PraticienService
         try {
             $liste = Praticien::query()
                 ->select('praticien.*', 'specialite.lib_specialite')
-                ->join('posseder', 'posseder.id_praticien', '=', 'praticien.id_praticien')
-                ->join('specialite', 'specialite.id_specialite', '=', 'posseder.id_specialite')
+                ->leftJoin('posseder', 'posseder.id_praticien', '=', 'praticien.id_praticien')
+                ->leftJoin('specialite', 'specialite.id_specialite', '=', 'posseder.id_specialite')
                 ->orderBy('specialite.lib_specialite', 'asc')
                 ->get();
 
