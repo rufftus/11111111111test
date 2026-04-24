@@ -19,7 +19,7 @@ class PraticienController extends Controller
             $fiches = $services->getListPracticien();
             return view('listPraticien', compact('fiches'));
         } catch (\Exception $exception) {
-            return view('error', compact('exception'));
+            return view(     'error', compact('exception'));
         }
 
     }
