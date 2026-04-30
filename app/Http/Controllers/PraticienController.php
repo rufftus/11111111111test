@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use App\Models\Praticien;
 use App\Service\PraticienService;
 
-
 class PraticienController extends Controller
 {
     public function practiceA()
@@ -19,9 +18,8 @@ class PraticienController extends Controller
             $fiches = $services->getListPracticien();
             return view('listPraticien', compact('fiches'));
         } catch (\Exception $exception) {
-            return view(     'error', compact('exception'));
+            return view('error', compact('exception'));
         }
-
     }
 
     public function index(Request $request)
@@ -29,8 +27,11 @@ class PraticienController extends Controller
         $query = $request->input('laRecherche');
 
         if ($query) {
-            $praticiens = Praticien::where('nom_praticien', 'LIKE', "%{$query}%")
-                ->orWhere('prenom_praticien', 'LIKE', "%{$query}%")
+            $praticiens = Praticien::query()
+                ->select('praticien.*', 'type_praticien.lib_type_praticien')
+                ->leftJoin('type_praticien', 'praticien.id_type_praticien', '=', 'type_praticien.id_type_praticien')
+                ->where('praticien.nom_praticien', 'LIKE', "%{$query}%")
+                ->orWhere('type_praticien.lib_type_praticien', 'LIKE', "%{$query}%")
                 ->get();
         } else {
             $praticiens = collect();
@@ -39,12 +40,6 @@ class PraticienController extends Controller
         return view('recherche', compact('praticiens', 'query'));
     }
 
-
-
-
-
-
-
     public function searchAPI(Request $request)
     {
         $services = new PraticienService();
@@ -52,9 +47,21 @@ class PraticienController extends Controller
         return json_encode($fiches);
     }
 
+    public function rechercheAPI(Request $request)
+    {
+        $query = $request->input('laRecherche');
 
+        if ($query) {
+            $praticiens = Praticien::query()
+                ->select('praticien.*', 'type_praticien.lib_type_praticien')
+                ->leftJoin('type_praticien', 'praticien.id_type_praticien', '=', 'type_praticien.id_type_praticien')
+                ->where('praticien.nom_praticien', 'LIKE', "%{$query}%")
+                ->orWhere('type_praticien.lib_type_praticien', 'LIKE', "%{$query}%")
+                ->get();
+        } else {
+            $praticiens = Praticien::all();
+        }
 
-
-
-
+        return response()->json($praticiens, 200);
+    }
 }

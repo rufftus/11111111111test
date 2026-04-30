@@ -10,7 +10,6 @@
                 <th>Nom</th>
                 <th>Prénom</th>
                 <th>Adresse</th>
-                <th>Spécialité</th>
             </tr>
         </thread>
         @foreach($fiches as $fr)
@@ -19,7 +18,6 @@
                 <td>{{$fr->nom_praticien}}</td>
                 <td>{{$fr->prenom_praticien}}</td>
                 <td>{{$fr->adresse_praticien}}</td>
-                <td>{{$fr->lib_specialite}}</td>
             </tr>
 
         @endforeach

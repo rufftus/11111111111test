@@ -11,20 +11,13 @@ class PraticienService
 
     public function getListPracticien()
     {
-        try {
-            $liste = Praticien::query()
-                ->select('praticien.*', 'specialite.lib_specialite')
-                ->leftJoin('posseder', 'posseder.id_praticien', '=', 'praticien.id_praticien')
-                ->leftJoin('specialite', 'specialite.id_specialite', '=', 'posseder.id_specialite')
-                ->orderBy('specialite.lib_specialite', 'asc')
-                ->get();
+        $praticiens = Praticien::leftJoin('posseder', 'praticien.id_praticien', '=', 'posseder.id_praticien')
+            ->leftJoin('specialite', 'posseder.id_specialite', '=', 'specialite.id_specialite')
+            ->select('praticien.*', 'specialite.lib_specialite')
+            ->orderBy('specialite.lib_specialite', 'asc')
+            ->get();
 
-            return $liste;
-
-        } catch (QueryException $exception) {
-            $userMessage = "Impossible d'accéder à la base de données.";
-            throw new UserException($userMessage, $exception->getMessage(), $exception->getCode());
-        }
+        return $praticiens;
     }
 
 
