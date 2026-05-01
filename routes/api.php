@@ -36,7 +36,10 @@ Route::get('/specialites', [SpecialiteController::class, 'index']);
 Route::get('/specialites/top5', [SpecialiteController::class, 'top5']);
 
 // --- INVITATIONS (Activités Complémentaires) ---
+// ... tes autres routes ...
+
+// Invitations (CRUD)
 Route::get('/invitations', [InviterController::class, 'index']);
 Route::post('/invitations', [InviterController::class, 'store']);
-Route::put('/invitations/{id_activite}/{id_praticien}', [InviterController::class, 'update']);
-Route::delete('/invitations/{id_activite}/{id_praticien}', [InviterController::class, 'destroy']);
+Route::put('/invitations/{id_activite_compl}/{id_praticien}', [InviterController::class, 'update']);
+Route::delete('/invitations/{id_activite_compl}/{id_praticien}', [InviterController::class, 'destroy']);

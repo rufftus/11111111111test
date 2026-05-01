@@ -1,66 +1,48 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Service\InviterService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class InviterController extends Controller
 {
-    // Récupérer toutes les invitations avec les infos liées
-    public function index()
-    {
-        $invitations = DB::table('inviter')
-            ->join('praticien', 'inviter.id_praticien', '=', 'praticien.id_praticien')
-            ->join('activite_compl', 'inviter.id_activite_compl', '=', 'activite_compl.id_activite_compl')
-            ->select('inviter.*', 'praticien.nom_praticien', 'praticien.prenom_praticien', 'activite_compl.theme_activite')
-            ->get();
+    protected $inviterService;
 
-        return response()->json($invitations);
+    public function __construct(InviterService $inviterService)
+    {
+        $this->inviterService = $inviterService;
     }
 
-    // AJOUT
+    public function index()
+    {
+        return response()->json($this->inviterService->getAllInvitations());
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'id_activite_compl' => 'required|integer',
             'id_praticien'      => 'required|integer',
-            'specialiste'       => 'required|string|max:1' // ex: 'O' ou 'N'
+            'specialiste'       => 'required|string|max:1' // 'O' ou 'N'
         ]);
 
-        DB::table('inviter')->insert([
-            'id_activite_compl' => $request->id_activite_compl,
-            'id_praticien'      => $request->id_praticien,
-            'specialiste'       => $request->specialiste
-        ]);
-
+        $this->inviterService->addInvitation($request->all());
         return response()->json(['message' => 'Invitation créée avec succès'], 201);
     }
 
-    // MODIFICATION
-    public function update(Request $request, $id_activite, $id_praticien)
+    public function update(Request $request, $id_activite_compl, $id_praticien)
     {
         $request->validate([
             'specialiste' => 'required|string|max:1'
         ]);
 
-        DB::table('inviter')
-            ->where('id_activite_compl', $id_activite)
-            ->where('id_praticien', $id_praticien)
-            ->update([
-                'specialiste' => $request->specialiste
-            ]);
-
+        $this->inviterService->updateInvitation($id_activite_compl, $id_praticien, $request->specialiste);
         return response()->json(['message' => 'Invitation modifiée avec succès']);
     }
 
-    // SUPPRESSION
-    public function destroy($id_activite, $id_praticien)
+    public function destroy($id_activite_compl, $id_praticien)
     {
-        DB::table('inviter')
-            ->where('id_activite_compl', $id_activite)
-            ->where('id_praticien', $id_praticien)
-            ->delete();
-
+        $this->inviterService->deleteInvitation($id_activite_compl, $id_praticien);
         return response()->json(['message' => 'Invitation supprimée avec succès']);
     }
 }
