@@ -1,110 +1,66 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Activite_compl;
 use Illuminate\Http\Request;
-use App\Models\Inviter;
-use Exception;
-use Illuminate\Support\Facades\Session;
-use App\Service\InviterService;
+use Illuminate\Support\Facades\DB;
 
 class InviterController extends Controller
 {
-    public function listInviter() {
-        try {
-            $service = new InviterService();
-            $invitations = $service->getAllInvitations();
-            return view('listInvitations', compact('invitations'));
-        } catch (Exception $exception) {
-            return view('error', compact('exception'));
-        }
-    }
-
-    public function addInviter()
+    // Récupérer toutes les invitations avec les infos liées
+    public function index()
     {
-        $service = new InviterService();
-        $activites = $service->getActivites();
-        $praticiens = $service->getPraticiens();
-        return view('formInvitation', compact('activites', 'praticiens'));
+        $invitations = DB::table('inviter')
+            ->join('praticien', 'inviter.id_praticien', '=', 'praticien.id_praticien')
+            ->join('activite_compl', 'inviter.id_activite_compl', '=', 'activite_compl.id_activite_compl')
+            ->select('inviter.*', 'praticien.nom_praticien', 'praticien.prenom_praticien', 'activite_compl.theme_activite')
+            ->get();
+
+        return response()->json($invitations);
     }
 
-    public function editInviter($id_activite, $id_praticien)
+    // AJOUT
+    public function store(Request $request)
     {
-        $service = new InviterService();
-        $invitation = $service->getInvitation($id_activite, $id_praticien);
-        $activites = $service->getActivites();
-        $praticiens = $service->getPraticiens();
-        return view('formInvitation', compact('invitation', 'activites', 'praticiens'));
+        $request->validate([
+            'id_activite_compl' => 'required|integer',
+            'id_praticien'      => 'required|integer',
+            'specialiste'       => 'required|string|max:1' // ex: 'O' ou 'N'
+        ]);
+
+        DB::table('inviter')->insert([
+            'id_activite_compl' => $request->id_activite_compl,
+            'id_praticien'      => $request->id_praticien,
+            'specialiste'       => $request->specialiste
+        ]);
+
+        return response()->json(['message' => 'Invitation créée avec succès'], 201);
     }
 
-    public function validInviter(Request $request)
+    // MODIFICATION
+    public function update(Request $request, $id_activite, $id_praticien)
     {
-        try {
-            $service = new InviterService();
-            $id_activite = $request->input('id_activite_compl');
-            $id_praticien = $request->input('id_praticien');
-            $specialiste = $request->input('specialiste') ?? 'Non défini';
+        $request->validate([
+            'specialiste' => 'required|string|max:1'
+        ]);
 
-            $old_id_activite = $request->input('old_id_activite_compl');
-            $old_id_praticien = $request->input('old_id_praticien');
+        DB::table('inviter')
+            ->where('id_activite_compl', $id_activite)
+            ->where('id_praticien', $id_praticien)
+            ->update([
+                'specialiste' => $request->specialiste
+            ]);
 
-            $service->saveInvitation($id_activite, $id_praticien, $specialiste, $old_id_activite, $old_id_praticien);
-
-            return redirect('/listerInvitations');
-        } catch (Exception $exception) {
-            return view('error', compact('exception'));
-        }
+        return response()->json(['message' => 'Invitation modifiée avec succès']);
     }
 
-    public function removeInviter($id_activite, $id_praticien)
+    // SUPPRESSION
+    public function destroy($id_activite, $id_praticien)
     {
-        try {
-            $service = new InviterService();
-            $service->deleteInvitation($id_activite, $id_praticien);
-            return redirect('/listerInvitations');
-        } catch (Exception $exception) {
-            return view('error', compact('exception'));
-        }
-    }
+        DB::table('inviter')
+            ->where('id_activite_compl', $id_activite)
+            ->where('id_praticien', $id_praticien)
+            ->delete();
 
-    // --- METHODES API POUR REACT ---
-    public function listInviterAPI() {
-        try {
-            $service = new InviterService();
-            return response()->json($service->getAllInvitations(), 200);
-        } catch (Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 500);
-        }
-    }
-
-    public function addInviterAPI(Request $request) {
-        try {
-            $service = new InviterService();
-            $service->saveInvitation($request->id_activite_compl, $request->id_praticien, $request->specialiste ?? 'Non défini');
-            return response()->json(['success' => true, 'message' => 'Invitation ajoutée'], 201);
-        } catch (Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 500);
-        }
-    }
-
-    public function updateInviterAPI(Request $request) {
-        try {
-            $service = new InviterService();
-            $service->saveInvitation($request->id_activite_compl, $request->id_praticien, $request->specialiste ?? 'Non défini', $request->old_id_activite_compl, $request->old_id_praticien);
-            return response()->json(['success' => true, 'message' => 'Invitation modifiée'], 200);
-        } catch (Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 500);
-        }
-    }
-
-    public function removeInviterAPI($id_activite, $id_praticien) {
-        try {
-            $service = new InviterService();
-            $service->deleteInvitation($id_activite, $id_praticien);
-            return response()->json(['success' => true, 'message' => 'Invitation supprimée'], 200);
-        } catch (Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 500);
-        }
+        return response()->json(['message' => 'Invitation supprimée avec succès']);
     }
 }

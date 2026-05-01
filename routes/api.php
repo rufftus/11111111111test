@@ -20,9 +20,23 @@ Route::get('visiteur/logout',[VisiteurController::class,'logoutAPI'])
     ->middleware('auth:sanctum');
 
 Route::get('visiteur/unauthorized',[VisiteurController::class,'unauthorizedAPI'])
-    ->name('login');Route::get('/topSpecialites', [SpecialiteController::class, 'topSpecialitesAPI']);
-Route::get('/praticiens/recherche', [PraticienController::class, 'rechercheAPI']);
-Route::get('/invitations', [InviterController::class, 'listInviterAPI']);
-Route::post('/invitations/ajouter', [InviterController::class, 'addInviterAPI']);
-Route::post('/invitations/modifier', [InviterController::class, 'updateInviterAPI']);
-Route::delete('/invitations/supprimer/{id_activite}/{id_praticien}', [InviterController::class, 'removeInviterAPI']);
+    ->name('login');
+
+
+// --- PRATICIENS ---
+// Recherche par nom ou type
+Route::get('/praticiens/search', [PraticienController::class, 'search']);
+// Praticiens filtrés par spécialité
+Route::get('/praticiens/specialite/{id}', [PraticienController::class, 'getBySpecialite']);
+
+// --- SPECIALITES ---
+// Liste de toutes les spécialités
+Route::get('/specialites', [SpecialiteController::class, 'index']);
+// Top 5 des spécialités (le plus d'invités)
+Route::get('/specialites/top5', [SpecialiteController::class, 'top5']);
+
+// --- INVITATIONS (Activités Complémentaires) ---
+Route::get('/invitations', [InviterController::class, 'index']);
+Route::post('/invitations', [InviterController::class, 'store']);
+Route::put('/invitations/{id_activite}/{id_praticien}', [InviterController::class, 'update']);
+Route::delete('/invitations/{id_activite}/{id_praticien}', [InviterController::class, 'destroy']);

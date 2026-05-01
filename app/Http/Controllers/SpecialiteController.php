@@ -1,38 +1,29 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Service\SpecialiteService;
+use App\Models\Specialite;
+use Illuminate\Support\Facades\DB;
 
 class SpecialiteController extends Controller
 {
-    // Fonction préservée pour ne pas casser ton ancienne route
-    public function practiceB()
+    // Liste toutes les spécialités (utile pour ton menu déroulant en React)
+    public function index()
     {
-        // Ton code existant s'il y en avait un
-        return view('home');
+        return response()->json(Specialite::all());
     }
 
-    public function topSpecialites()
+    // Fonctionnalité 4 : Top 5 spécialités (le plus de praticiens invités)
+    public function top5()
     {
-        try {
-            $service = new SpecialiteService();
-            $specialites = $service->getListTop();
-            return view('topSpecialites', compact('specialites'));
-        } catch (\Exception $exception) {
-            return view('error', compact('exception'));
-        }
-    }
+        $topSpecialites = DB::table('specialite')
+            ->join('posseder', 'specialite.id_specialite', '=', 'posseder.id_specialite')
+            ->join('inviter', 'posseder.id_praticien', '=', 'inviter.id_praticien')
+            ->select('specialite.id_specialite', 'specialite.lib_specialite', DB::raw('count(DISTINCT inviter.id_praticien) as total_invites'))
+            ->groupBy('specialite.id_specialite', 'specialite.lib_specialite')
+            ->orderByDesc('total_invites')
+            ->limit(5)
+            ->get();
 
-    public function topSpecialitesAPI()
-    {
-        try {
-            $service = new SpecialiteService();
-            $specialites = $service->getListTop();
-            return response()->json($specialites, 200);
-        } catch (\Exception $exception) {
-            return response()->json(['error' => $exception->getMessage()], 500);
-        }
+        return response()->json($topSpecialites);
     }
 }
