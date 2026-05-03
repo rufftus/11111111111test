@@ -24,7 +24,7 @@ class PraticienController extends Controller
         $praticiens = $query->get();
         $types = TypePraticien::all();
 
-        return view('mission7.recherche', compact('praticiens', 'types'));
+        return view('praticiens.recherche', compact('praticiens', 'types'));
     }
 
     // Fonctionnalité 3 : Praticiens par spécialité
@@ -43,7 +43,7 @@ class PraticienController extends Controller
             }
         }
 
-        return view('mission7.par_specialite', compact('specialites', 'praticiens'));
+        return view('praticiens.par_specialite', compact('specialites', 'praticiens'));
     }
 
     // Fonctionnalité 4 : Top 5 des spécialités (le plus de praticiens invités)
@@ -58,6 +58,6 @@ class PraticienController extends Controller
             ->limit(5)
             ->get();
 
-        return view('mission7.top_specialites', compact('topSpecialites'));
+        return view('praticiens.top_specialites', compact('topSpecialites'));
     }
 }

@@ -12,7 +12,7 @@ class InvitationController extends Controller
     public function index($id_praticien)
     {
         $praticien = Praticien::with('activites')->findOrFail($id_praticien);
-        return view('mission7.invitations.indexx', compact('praticien'));
+        return view('invitations.indexx', compact('praticien'));
     }
 
     // Formulaire d'ajout
@@ -24,7 +24,7 @@ class InvitationController extends Controller
             $query->select('id_activite_compl')->from('inviter')->where('id_praticien', $id_praticien);
         })->get();
 
-        return view('mission7.invitations.form', compact('praticien', 'activites'));
+        return view('invitations.create', compact('praticien', 'activites'));
     }
 
     // Sauvegarde de l'ajout
@@ -49,7 +49,7 @@ class InvitationController extends Controller
             ->where('id_praticien', $id_praticien)
             ->first();
 
-        return view('mission7.invitations.edit', compact('praticien', 'activite', 'invitation'));
+        return view('invitations.edit', compact('praticien', 'activite', 'invitation'));
     }
 
     // Sauvegarde de la modification
