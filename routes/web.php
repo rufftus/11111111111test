@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\FraisHFController;
-use App\Http\Controllers\InviterController;
 use App\Http\Controllers\VisiteurController;
 use App\Http\Controllers\FraisController;
 use App\Http\Controllers\PraticienController;
@@ -30,15 +29,21 @@ Route::post('validerFraisHF',[FraisHFController::class,'validFraisHF']);
 Route::get('/practicienA',[PraticienController::class,'practiceA']);
 Route::get('/practicienB',[SpecialiteController::class,'practiceB']);
 
-// --- MISSION 7 : Recherche de Praticiens ---
-Route::get('/recherche', [PraticienController::class, 'index'])->name('recherche.praticien');
+use App\Http\Controllers\InvitationController;
 
-// --- MISSION 7 : Gestion des Invitations ---
-Route::get('/listerInvitations', [InviterController::class, 'listInviter']);
-Route::get('/ajouterInviter', [InviterController::class, 'addInviter'])->name('ajouter.inviter');
-Route::post('/validerInviter', [InviterController::class, 'validInviter'])->name('valider.inviter');
-Route::get('/editerInviter/{id_activite}/{id_praticien}', [InviterController::class, 'editInviter']);
-Route::get('/supprimerInviter/{id_activite}/{id_praticien}', [InviterController::class, 'removeInviter']);
+// 1. Recherche d'un praticien (nom ou type)
+Route::get('/praticiens/recherche', [PraticienController::class, 'recherche'])->name('praticiens.recherche');
 
-// --- MISSION 7 : Top 5 Spécialités ---
-Route::get('/topSpecialites', [SpecialiteController::class, 'topSpecialites']);
+// 3. Affichage des praticiens par spécialité
+Route::get('/praticiens/specialite', [PraticienController::class, 'parSpecialite'])->name('praticiens.specialite');
+
+// 4. Top 5 des spécialités
+Route::get('/praticiens/top-specialites', [PraticienController::class, 'topSpecialites'])->name('praticiens.top');
+
+// 2. Gestion des invitations (CRUD)
+Route::get('/invitations/praticien/{id}', [InvitationController::class, 'index'])->name('invitations.index');
+Route::get('/invitations/create/{id_praticien}', [InvitationController::class, 'create'])->name('invitations.create');
+Route::post('/invitations', [InvitationController::class, 'store'])->name('invitations.store');
+Route::get('/invitations/{id_activite}/{id_praticien}/edit', [InvitationController::class, 'edit'])->name('invitations.edit');
+Route::put('/invitations/{id_activite}/{id_praticien}', [InvitationController::class, 'update'])->name('invitations.update');
+Route::delete('/invitations/{id_activite}/{id_praticien}', [InvitationController::class, 'destroy'])->name('invitations.destroy');

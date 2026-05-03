@@ -1,34 +1,63 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Praticien;
 use Illuminate\Http\Request;
+use App\Models\Praticien;
+use App\Models\TypePraticien;
+use App\Models\Specialite;
+use Illuminate\Support\Facades\DB;
 
 class PraticienController extends Controller
 {
-    // Fonctionnalité 1 : Recherche d'un praticien sur son nom ou le type de praticien
-    public function search(Request $request)
+    // Fonctionnalité 1 : Recherche
+    public function recherche(Request $request)
     {
-        $query = $request->input('q');
+        $query = Praticien::with('typePraticien');
 
-        $praticiens = Praticien::with('typePraticien')
-            ->where('nom_praticien', 'LIKE', "%{$query}%")
-            ->orWhereHas('typePraticien', function($q) use ($query) {
-                $q->where('lib_type_praticien', 'LIKE', "%{$query}%");
-            })
-            ->get();
+        if ($request->filled('nom')) {
+            $query->where('nom_praticien', 'like', '%' . $request->nom . '%');
+        }
+        if ($request->filled('id_type_praticien')) {
+            $query->where('id_type_praticien', $request->id_type_praticien);
+        }
 
-        return response()->json($praticiens);
+        $praticiens = $query->get();
+        $types = TypePraticien::all();
+
+        return view('mission7.recherche', compact('praticiens', 'types'));
     }
 
-    // Fonctionnalité 3 : Affichage des praticiens par spécialité
-    public function getBySpecialite($id_specialite)
+    // Fonctionnalité 3 : Praticiens par spécialité
+    public function parSpecialite(Request $request)
     {
-        $praticiens = Praticien::with('typePraticien')
-            ->whereHas('specialites', function($q) use ($id_specialite) {
-                $q->where('specialite.id_specialite', $id_specialite);
-            })->get();
+        $specialites = Specialite::all();
+        $praticiens = collect();
 
-        return response()->json($praticiens);
+        if ($request->filled('id_specialite')) {
+            $specialite = Specialite::with('praticiens')->find($request->id_specialite);
+            if($specialite) {
+                // Via la relation belongsToMany (table posseder)
+                $praticiens = Praticien::whereHas('specialites', function($q) use($request) {
+                    $q->where('specialite.id_specialite', $request->id_specialite);
+                })->get();
+            }
+        }
+
+        return view('mission7.par_specialite', compact('specialites', 'praticiens'));
+    }
+
+    // Fonctionnalité 4 : Top 5 des spécialités (le plus de praticiens invités)
+    public function topSpecialites()
+    {
+        $topSpecialites = DB::table('specialite')
+            ->join('posseder', 'specialite.id_specialite', '=', 'posseder.id_specialite')
+            ->join('inviter', 'posseder.id_praticien', '=', 'inviter.id_praticien')
+            ->select('specialite.lib_specialite', DB::raw('COUNT(DISTINCT inviter.id_praticien) as nb_invites'))
+            ->groupBy('specialite.id_specialite', 'specialite.lib_specialite')
+            ->orderByDesc('nb_invites')
+            ->limit(5)
+            ->get();
+
+        return view('mission7.top_specialites', compact('topSpecialites'));
     }
 }
