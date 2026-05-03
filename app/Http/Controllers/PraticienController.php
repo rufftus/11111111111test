@@ -60,4 +60,37 @@ class PraticienController extends Controller
 
         return view('praticiens.top_specialites', compact('topSpecialites'));
     }
+
+
+
+
+
+
+
+    // Pour la recherche dans React
+    public function apiRecherche(Request $request) {
+        $query = Praticien::with('typePraticien');
+        if ($request->nom) $query->where('nom_praticien', 'like', '%' . $request->nom . '%');
+        if ($request->id_type_praticien) $query->where('id_type_praticien', $request->id_type_praticien);
+        return response()->json($query->get());
+    }
+
+// Pour le Top 5 dans React
+    public function apiTopSpecialites() {
+        $data = DB::table('specialite')
+            ->join('posseder', 'specialite.id_specialite', '=', 'posseder.id_specialite')
+            ->join('inviter', 'posseder.id_praticien', '=', 'inviter.id_praticien')
+            ->select('specialite.lib_specialite', DB::raw('COUNT(DISTINCT inviter.id_praticien) as nb_invites'))
+            ->groupBy('specialite.id_specialite', 'specialite.lib_specialite')
+            ->orderByDesc('nb_invites')->limit(5)->get();
+        return response()->json($data);
+    }
+
+// Pour le filtre par spécialité
+    public function apiBySpecialite($id) {
+        $praticiens = Praticien::whereHas('specialites', function($q) use($id) {
+            $q->where('specialite.id_specialite', $id);
+        })->get();
+        return response()->json($praticiens);
+    }
 }

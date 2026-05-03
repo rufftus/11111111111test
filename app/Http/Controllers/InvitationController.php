@@ -30,13 +30,25 @@ class InvitationController extends Controller
     // Sauvegarde de l'ajout
     public function store(Request $request)
     {
-        DB::table('inviter')->insert([
-            'id_activite_compl' => $request->id_activite_compl,
-            'id_praticien' => $request->id_praticien,
-            'specialiste' => $request->specialiste // 'O' ou 'N'
-        ]);
+        try {
+            DB::table('inviter')->insert([
+                'id_activite_compl' => $request->id_activite_compl,
+                'id_praticien'      => $request->id_praticien,
+                'specialiste'       => $request->specialiste
+            ]);
 
-        return redirect()->route('invitations.index', $request->id_praticien)->with('success', 'Invitation ajoutée.');
+            // Si la requête vient de React (API), on renvoie du JSON
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Invitation ajoutée avec succès'], 201);
+            }
+
+            return redirect()->route('invitations.indexx', $request->id_praticien)->with('success', 'Invitation ajoutée.');
+        } catch (\Exception $e) {
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json(['error' => 'Ce praticien est déjà invité à cette activité'], 400);
+            }
+            return redirect()->back()->with('error', 'Erreur lors de l\'ajout.');
+        }
     }
 
     // Formulaire de modification
@@ -71,6 +83,28 @@ class InvitationController extends Controller
             ->where('id_praticien', $id_praticien)
             ->delete();
 
+        if (request()->wantsJson() || request()->is('api/*')) {
+            return response()->json(['message' => 'Invitation supprimée']);
+        }
+
         return redirect()->back()->with('success', 'Invitation supprimée.');
+    }
+
+
+
+
+
+
+
+
+
+
+    public function apiIndex($id_praticien) {
+        $praticien = Praticien::with('activites')->findOrFail($id_praticien);
+        return response()->json($praticien);
+    }
+
+    public function getActivites() {
+        return response()->json(\App\Models\ActiviteCompl::all());
     }
 }
