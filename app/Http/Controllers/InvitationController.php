@@ -12,7 +12,7 @@ class InvitationController extends Controller
     public function index($id_praticien)
     {
         $praticien = Praticien::with('activites')->findOrFail($id_praticien);
-        return view('mission7.invitations.index', compact('praticien'));
+        return view('mission7.invitations.indexx', compact('praticien'));
     }
 
     // Formulaire d'ajout
