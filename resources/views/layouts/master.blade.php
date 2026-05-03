@@ -37,12 +37,10 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="{{ url('/practicienA') }}">Practicien</a>
+                            <a class="nav-link dropdown-toggle" href="#">Praticiens</a>
                             <ul class="dropdown-menu">
-                                <a class="dropdown-item" href="{{ url('/topSpecialites') }}">Top 5 Spécialités</a>
-                                <a class="dropdown-item" href="{{ url('/listerInvitations') }}">Lister les invitations</a>
-                                <li><a class="dropdown-item" href="{{ url('/ajouterInviter') }}">Formulaire d'invité</a></li>
-                                <li><a class="dropdown-item" href="{{ url('/recherche') }}">Recherche</a></li>
+                                <li><a class="dropdown-item" href="{{ route('praticiens.top') }}">Top 5 Spécialités</a></li>
+                                <li><a class="dropdown-item" href="{{ route('praticiens.recherche') }}">Recherche & Invitations</a></li>
                             </ul>
                         </li>
                     </ul>
