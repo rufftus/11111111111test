@@ -93,4 +93,9 @@ class PraticienController extends Controller
         })->get();
         return response()->json($praticiens);
     }
+
+    public function getTypes() {
+        // Renvoie tous les types de praticiens en JSON
+        return response()->json(\App\Models\TypePraticien::all());
+    }
 }
