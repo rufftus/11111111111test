@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/invitations/praticien/{id}', [InvitationController::class, 'apiIndex']);
     Route::post('/invitations', [InvitationController::class, 'store']); // Pour l'ajout via React
     Route::delete('/invitations/{idActivite}/{idPraticien}', [InvitationController::class, 'destroy']);
+    Route::put('/invitations/{idActivite}/{idPraticien}', [InvitationController::class, 'update']);
 });
 
 Route::get('visiteur/unauthorized', [VisiteurController::class, 'unauthorizedAPI'])->name('login');

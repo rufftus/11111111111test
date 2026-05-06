@@ -65,6 +65,7 @@ class InvitationController extends Controller
     }
 
     // Sauvegarde de la modification
+// Sauvegarde de la modification
     public function update(Request $request, $id_activite, $id_praticien)
     {
         DB::table('inviter')
@@ -72,8 +73,14 @@ class InvitationController extends Controller
             ->where('id_praticien', $id_praticien)
             ->update(['specialiste' => $request->specialiste]);
 
+        // Si la requête vient de React
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json(['message' => 'Invitation modifiée avec succès']);
+        }
+
         return redirect()->route('invitations.index', $id_praticien)->with('success', 'Invitation modifiée.');
     }
+
 
     // Suppression
     public function destroy($id_activite, $id_praticien)
