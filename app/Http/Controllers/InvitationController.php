@@ -81,7 +81,6 @@ class InvitationController extends Controller
         return redirect()->route('invitations.index', $id_praticien)->with('success', 'Invitation modifiée.');
     }
 
-
     // Suppression
     public function destroy($id_activite, $id_praticien)
     {
